@@ -3,9 +3,111 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Test</title>
+  <title>Test produktu</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    h1 {
+      font-size: 24px;
+    }
+    img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      width: 100%;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Test landing</h1>
+
+<div class="container">
+
+  <h1>Odvoz odpadu do 24 hodín</h1>
+
+  <img src="https://via.placeholder.com/500x300" alt="produkt">
+
+  <p>
+    Momentálne testujeme záujem o túto službu vo vašom regióne.  
+    Ak vás zaujala, zanechajte nám správu.
+  </p>
+
+  <form id="form">
+  <input type="text" name="name" placeholder="Vaše meno">
+  <input type="email" name="email" placeholder="Email" required>
+  <textarea name="message" placeholder="Vaša správa"></textarea>
+
+  <input type="hidden" name="slug" value="odvoz-odpadu">
+  <input type="hidden" name="page_url" id="page_url">
+  <input type="hidden" name="user_agent" id="user_agent">
+
+  <button type="submit">Odoslať</button>
+</form>
+
+<p id="status"></p>
+
+<script>
+  document.getElementById('page_url').value = window.location.href;
+  document.getElementById('user_agent').value = navigator.userAgent;
+
+  const form = document.getElementById('form');
+  const status = document.getElementById('status');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    status.textContent = 'Odosielam...';
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('SEM_VLOZ_URL_Z_APPS_SCRIPTU', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.ok) {
+        status.textContent = 'Ďakujeme, správu sme uložili.';
+        form.reset();
+      } else {
+        status.textContent = 'Chyba: ' + (result.error || 'Nepodarilo sa odoslať formulár.');
+      }
+    } catch (error) {
+      status.textContent = 'Nepodarilo sa odoslať formulár.';
+    }
+  });
+</script>
+
 </body>
 </html>
